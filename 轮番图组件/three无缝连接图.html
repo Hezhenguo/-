@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{
+			margin:0;
+			padding:0;
+		}
+		ul,ol{
+			list-style: none;
+		}
+		#container{
+			width: 680px;
+			height: 344px;
+			/*background: #ccc;*/
+			margin:100px auto;
+			overflow: hidden;
+			position: relative;
+		}
+		#content{
+			position: absolute;
+			left: 0;
+		}
+		#content img{
+			float: left;
+		}
+		#tab{
+			position: absolute;
+			right: 10px;
+			bottom: 10px;
+			z-index: 99999;
+		}
+		#tab li{
+			float: left;
+			width: 20px;
+			height: 20px;
+			background: red;
+			margin-right: 10px;
+			text-align: center;
+			line-height: 20px;
+			cursor: pointer;
+			color: #fff;
+		}
+		#tab .selected{
+			background: orange;
+		}
+		#arrow{
+			position: absolute;
+			left: 10px;
+			bottom: 10px;
+			z-index: 99999;
+		}
+		#arrow span{
+			width: 20px;
+			height: 20px;
+			float: left;
+			background: red;
+			color: #fff;
+			margin-right: 10px;
+			text-align: center;
+			line-height: 20px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<div id="container">
+		<ul id="tab">
+			<li class="selected">1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+		</ul>
+		<div id="content">
+			<img src="image/1.jpg" alt="">
+			<img src="image/2.jpg" alt="">
+			<img src="image/3.jpg" alt="">
+			<img src="image/4.jpg" alt="">
+		</div>
+		<div id="arrow">
+			<span id="pre">&lt</span>
+			<span id="next">&gt</span>
+		</div>
+	</div>
+	
+	
+	<script src="hanshu/move.js"></script>
+	<script>
+		var oContainer = document.getElementById("container");
+		var oTab = document.getElementById("tab");
+		var aLi = oTab.children; 
+		var oContent = document.getElementById("content");
+		var aImg = oContent.children;
+		var oPre = document.getElementById("pre");
+		var oNext = document.getElementById("next");
+		var index = 0;//代表当前正在显示的图片索引；
+		var cloneImg = aImg[0].cloneNode();
+		oContent.appendChild(cloneImg);
+
+		oContent.style.width = aImg.length * aImg[0].offsetWidth + "px";
+		for( var i=0;i<aLi.length;i++){//控制aLi
+			aLi[i].index=i;
+			aLi[i].onmouseover = function(){
+				changeImg(this.index)
+				index=this.index;
+			};
+			aImg[i].style.zIndex = aImg.length-i; 
+		}
+
+		function changeImg(idx){//改变图片；
+			bStop=false;
+			for(var i=0;i<aLi.length;i++){
+				aLi[i].className='';
+			}
+			aLi[idx==4?0:idx].className="selected";
+			mover(oContent,{left:-idx*aImg[0].width},function(){
+				if(idx==aImg.length-1){
+					oContent.style.left=0;
+					index=0;
+				}
+				bStop=true;
+			});
+		};
+
+  	oPre.onclick = function(){
+	  	 index--;
+	  	if (index == -1) {
+	  		index = aLi.length-1;
+	  	}
+	  	changeImg(index);
+	  };
+  	var bStop=true;//表示动画是否结束，true表示结束，false表示没结束；
+	oNext.onclick = function(){
+		if (bStop) {
+		 	index++;
+			if (index == aImg.length) {
+				index=0;
+			}
+			changeImg(index);
+		}
+	
+		changeImg(index);
+	};
+
+	var timer;
+	function run(){
+		timer =	setInterval(function(){
+		oNext.onclick();
+		},2000);
+	};
+	run();
+	oContainer.onmouseover = function(){
+		clearInterval(timer);
+	}
+	oContainer.onmouseout = function(){
+		run();
+	}
+
+
+
+
+	</script>
+</body>
+</html>

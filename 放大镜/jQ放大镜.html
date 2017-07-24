@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		img{
+			border: 0;
+		}
+		.small-pic{
+			width: 200px;
+			height: 150px;
+			float: left;
+			margin-right: 10px;
+			position: relative;
+			top:0px;
+			left: 0px;
+		}
+		.drag{
+			width: 40px;
+			height: 30px;
+			background: #ccc;
+			opacity: 0.7;
+			filter: alpha(opacity=70);
+			position: absolute;
+			display: none;
+		}
+		.big-pic{
+			width: 200px;
+			height: 150px;
+			float: left;
+			display: none;
+			position: relative;
+			overflow: hidden;
+			
+		}
+		#big-img{
+			position: absolute;
+		}
+	</style>
+</head>
+<body>
+	<div class="small-pic">
+		<div class="drag"></div>
+		<img src="01.jpg" alt="">
+	</div>
+	<div class="big-pic">
+		<img src="02.jpg" alt="" id="big-img">
+	</div>
+	<script src='jquery-1.12.3.js'></script>
+	<script>
+		$(function(){
+			var $samllPic = $('.small-pic');
+			var $drag = $('.drag');
+			var $bigPic = $('.big-pic');
+			var $bigImg = $('#big-img');
+
+			$samllPic.hover(function(){
+				$drag.show();
+				$bigPic.show();
+			},function(){
+				$drag.hide();
+				$bigPic.hide();
+			}).on('mousemove',function(e){
+				var iLef = e.pageX - $(this).offset().left - $drag.width()/2;
+				var iTop = e.pageY - $(this).offset().top - $drag.height()/2;
+
+				if(iLef > $samllPic.width()-$drag.width()){
+					iLef = $samllPic.width()-$drag.width();
+				}
+				if (iLef < 0) {
+					iLef=0;
+				}
+				if (iTop > $samllPic.height()-$drag.height()) {
+					iTop = $samllPic.height()-$drag.height();
+				}
+				if (iTop < 0) {
+					iTop = 0;
+				}
+
+				$drag.css({'left':iLef,'top':iTop});
+
+				var fLeft = iLef/($samllPic.width()-$drag.width());
+				var fTop = iTop/($samllPic.height()-$drag.height());
+
+				$bigImg.css({'left':-fLeft*($bigImg.width()-$bigPic.width()),'top':
+
+						-fTop*($bigImg.height()-$bigPic.height())
+			    })
+
+
+
+
+
+			});
+
+
+
+
+
+
+		});
+
+
+
+	</script>
+</body>
+</html>

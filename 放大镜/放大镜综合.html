@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{
+			margin: 0 ;
+			padding: 0;
+		}
+		img{
+			border: 0;
+		}
+		#small-pic{
+			width: 200px;
+			height: 150px;
+			float: left;
+			margin-right: 10px;
+			position: relative;
+		}
+		#drag{
+			width: 40px;
+			height: 30px;
+			background: #ccc;
+			position: absolute;
+			top:0px;
+			left: 0px;
+			opacity: 0.7;
+			filter: alpha(opacity=70);
+			display: none;
+		}
+		#big-pic{
+			width: 200px;
+			height: 150px;
+			overflow: hidden;
+			float: left;
+			display: none;
+			position: relative;
+		}
+		#big-pic img{
+			position: absolute;
+		}
+	</style>
+</head>
+<body>
+	<div id="small-pic">
+		<img src="01.jpg" alt="">
+		<div id="drag"></div>
+	</div>
+	<div id="big-pic">
+		<img src="02.jpg" alt="" id="big-img">
+	</div>
+	<script>
+		var oSmallPic = document.getElementById('small-pic');
+		var oDrag  = document.getElementById('drag');
+		var oBigImg = document.getElementById('big-img');
+		var oBigPic = document.getElementById('big-pic');
+
+		oSmallPic.onmouseover = function(){
+			oDrag.style.display = 'block';
+			oBigPic.style.display = 'block'
+		}
+		oSmallPic.onmouseout = function(){
+			oDrag.style.display = 'none';
+			oBigPic.style.display = 'none';  
+		}
+		oSmallPic.onmousemove = function(e){
+			e = e || window.event;
+			var iLef = e.clientX - oSmallPic.offsetLeft - oDrag.offsetWidth/2;
+			var iTop = e.clientY - oSmallPic.offsetTop - oDrag.offsetHeight/2;
+			
+			if( iLef > oSmallPic.offsetWidth - oDrag.offsetWidth ){
+				iLef = oSmallPic.offsetWidth - oDrag.offsetWidth;
+			}
+			if (iLef < 0 ) {
+				iLef = 0;
+			}
+			if (iTop > oSmallPic.offsetHeight - oDrag.offsetHeight ) {
+				iTop = oSmallPic.offsetHeight - oDrag.offsetHeight;	
+			}
+			if (iTop < 0) {
+				iTop = 0;
+			}
+
+			oDrag.style.left = iLef + 'px';
+			oDrag.style.top = iTop + 'px';
+
+			var fLeft = iLef/(oSmallPic.offsetWidth - oDrag.offsetWidth);
+			var fTop = iTop/(oSmallPic.offsetHeight - oDrag.offsetHeight);
+			// console.log(fLeft,fTop);
+
+			oBigImg.style.left = -fLeft*(oBigImg.offsetWidth - oBigPic.offsetWidth)+"px";
+			oBigImg.style.top = -fTop*(oBigImg.offsetHeight - oBigPic.offsetHeight)+
+			"px";
+
+		}
+
+
+
+	</script>
+
+</body>
+</html>
